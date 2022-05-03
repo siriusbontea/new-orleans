@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<!-- Use the HTML and CSS you developed in module 01 to fill out this template.-->
+
+<head>
+  <meta charset=utf-8 />
+  <title>Hot Spots in New Orleans, LA</title>
+
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <link rel='icon' href='https://newmapsplus.github.io/favicon.ico' type='image/x-icon' />
+  <!-- Add links to external css stylesheets. -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courgette&family=Redressed&display=swap" rel="stylesheet">
+  <!-- **************************************************************** -->
+  <!-- Check to make this links to the most current version of Leaflet! -->
+  <!-- **************************************************************** -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+  <!-- **************************************************************** -->
+  <!-- start frontloaded JavaScript -->
+  <!-- jQuery -->
+  <!-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+  <!-- end frontloaded JavaScript -->
+  <style>
+    /* Add custom styles. */
+    body {
+      font-family: 'Courgette', cursive;
+      font-weight: 400;
+      font-style: normal;
+      margin: 2;
+      padding: 3;
+      background: #fff6d0;
+      color: #000000;
+      font-size: 100%;
+    }
+
+    header,
+    section,
+    footer {
+      width: 80%;
+      margin: 20px auto;
+    }
+
+    h1 {
+      font-family: 'Redressed', cursive;
+      font-weight: 900;
+      font-style: bold;
+      font-size: 3em;
+      letter-spacing: .04em;
+      text-shadow: 3px 3px 3px #696969;
+      text-align: center;
+      margin: 10px auto;
+    }
+
+    h2 {
+      font-family: 'Redressed', cursive;
+      font-weight: 600;
+      font-style: bold;
+      font-size: 2em;
+      letter-spacing: .04em;
+      text-shadow: 2px 2px 2px #696969;
+      text-align: center;
+    }
+
+    h3 {
+      font-family: 'Redressed', cursive;
+      font-weight: 600;
+      font-style: bold;
+      font-size: 1.5em;
+      letter-spacing: .04em;
+      text-align: left;
+    }
+
+    .justify_paragraph {
+      font-size: 1.3em;
+      line-height: 1.5em;
+      text-align: justify;
+    }
+
+    sup {
+      vertical-align: super;
+      font-size: smaller;
+    }
+
+    a {
+      color: #0041b9;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: #018dff;
+    }
+
+    ul {
+      padding: 0px 25px 9px 30px;
+      line-height: 1.6em;
+    }
+
+    li {
+      margin: 6px 0
+    }
+
+    hr {
+      margin: 20px 0;
+      border: 0;
+      height: 1px;
+      background: #979797;
+    }
+
+    table,
+    th,
+    td {
+      border: none;
+    }
+
+    table.center {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .marginauto {
+      margin: auto;
+      display: block;
+    }
+
+    .caption {
+      margin: 0 0 20px 0;
+      display: block;
+      text-shadow: 1px 1px 1px #696969;
+    }
+
+    #map {
+      width: 100%;
+      height: 60vh;
+      margin: auto;
+      border: 1px solid #000000;
+      filter: drop-shadow(0.35rem 0.35rem 0.4rem #696969);
+      border-radius: 1.5%;
+    }
+
+    .highlight {
+      color: #a00c0a;
+      font-weight: bold;
+    }
+
+    img {
+      filter: drop-shadow(0.35rem 0.35rem 0.4rem #696969);
+    }
+
+    /* Change opacity on hover over the icon class */
+
+    .icon:hover {
+      opacity: .7;
+    }
+
+    /* Modify Leaflet's default popup style */
+
+    .leaflet-popup {
+      min-width: 375px;
+    }
+
+    .leaflet-popup-content h3 {
+      font-family: 'Redressed', cursive;
+      font-size: 1.6em;
+      margin-bottom: 2px;
+      text-align: center;
+    }
+
+    .leaflet-popup-content img {
+      border-radius: 0%;
+      width: 100%;
+      margin-top: 0.8rem;
+    }
+
+    .leaflet-popup-content {
+      font-family: 'Courgette', cursive;
+      font-size: 1.5em;
+      font-style: bold;
+    }
+
+    .leaflet-popup-content a {
+      font-weight: normal;
+    }
+
+    #no-table {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #no-table img {
+      width: 12%;
+      height: auto;
+      padding: 1%;
+      float: left;
+      box-sizing: border-box;
+    }
+
+    .avatar {
+      border-radius: 7%;
+    }
+
+    /* Use float property to make two-column layout */
+    .first-column {
+      float: left;
+      width: 49%;
+      padding-right: 2%;
+    }
+
+    .second-column {
+      float: left;
+      width: 49%;
+    }
+
+    /* Clear floats after columns */
+    .row::after {
+      content: "";
+      display: block;
+      clear: both;
+    }
+
+    @media screen and (max-width: 900px) {
+
+      .first-column,
+      .second-column {
+        width: 100%;
+      }
+    }
+
+
+    /* Add custom styles. */
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>Places of interest (pois) in New Orleans, LA </h1>
+  </header>
+
+  <section>
+    <div id='map'></div>
+  </section>
+
+  <section>
+
+    <p>This map provides a demonstration of Leaflet's customizable mapping options. Here, we have a small collection of
+      interesting hotspots in New Orleans.</p>
+
+  </section>
+  <footer>
+    <!-- Add footer information -->
+    <h3>Project Notes:</h3>
+    <ul>
+      <li>This webpage was built to meet requirements for Module 5 of the <a
+          href="https://newmapsplus.github.io/map672/syllabus/">MAP 672: Programming For Web Mapping</a>
+        course at the
+        <a href="https://newmapsplus.as.uky.edu/">University of Kentucky</a>.
+      </li>
+    </ul>
+    <!-- Be cautious of inlining styles. These will overwrite upstream CSS styles. -->
+    <h3>Tools, citations, and methodology used in this project:</h3>
+    <ul>
+
+      <li>All software tools used in this project were ran on the <a
+          href="https://freebsdfoundation.org/freebsd-project/what-is-freebsd/">FreeBSD 13-RELEASE</a>
+        Operating
+        System.
+      </li>
+      <!--
+			 <li><a href="https://www.qgis.org/en/site/forusers/alldownloads.html#freebsd">QGIS 3.22.3-Białowieża</a> was used to build the static maps.</li> 
+		  -->
+      <li><a href="https://github.com/microsoft/vscodeVisual">Visual Studio Code - Open Source ("Code - OSS")
+          1.63.2</a> was used for all coding with the following plugins installed: <a
+          href="https://beautifier.io/">Beautify</a>, <a href="https://github.com/formulahendry/vscode-code-runner">Code
+          Runner</a>, and <a href="https://github.com/ritwickdey/vscode-live-server">Live Server</a>.
+      <li>Code from <a href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">Leaflet 1.7.1</a> using map tiles
+        by <a href="https://www.thunderforest.com/maps/neighbourhood/">Thunderforest Neighbourhood</a> and map data and
+        coordinates pulled from <a
+          href="https://www.google.com/maps/place/New+Orleans,+LA/@29.9386771,-90.1131913,12.42z/data=!4m5!3m4!1s0x8620a454b2118265:0xdb065be85e22d3b4!8m2!3d29.9510658!4d-90.0715323">Google
+          Maps</a>.
+      </li>
+      <li>Code from <a href="http://code.jquery.com/">jQuery 3.6.0</a> is front loaded to enable effects in
+        Leaflet.
+      </li>
+      <li>Data accessed 20 February 2022.</li>
+      <hr>
+      <h3 style="text-align: center;">About the author:</h3>
+      <table class="center">
+        <tr>
+          <th><img src="photos/profile_pic_bw.png" class="avatar"></th>
+        </tr>
+        <tr>
+
+          <td style="padding-right: 17%; padding-left: 17%; text-align: justify;">An artist,
+            scientist, bibliophile, and autodidact at heart, Sirius enjoys applying these facets
+            in his role of dad and husband first and foremost. He also finds happiness with spending time with
+            Shin'yū
+            the Maltipoo (Shin'yū or 親友 is the Japanese term for "best friend"). Sirius also enjoys calligraphy,
+            metacognition, philosophy, and the pursuit of arcane knowledge regardless of the path it puts him
+            on. He
+            generally prefers Open Source Software solutions such as FreeBSD for daily computing, QGIS for
+            cartography
+            and geospatial analysis, GIMP and Inkscape for image manipulation. However, he is no stranger to
+            proprietary
+            solutions such as ArcGIS Pro, Adobe Photoshop and Illustrator.
+          </td>
+        <tr>
+          <td style="text-align: center;"><br>Connect with <a
+              href="https://www.linkedin.com/in/siriusbontea/">@SiriusBontea</a> on LinkedIn:</td>
+        </tr>
+        <tr>
+          <td style="text-align: center; padding-bottom: 10%;"><a href="https://www.linkedin.com/in/siriusbontea/"><img
+                src="images/SiriusBonteaLinkedInQRcode150px.png" alt="Sirius T. Bontea @ LinkedIn"></a></td>
+        </tr>
+
+        </tr>
+      </table>
+      <hr>
+
+      <a href="https://newmapsplus.github.io">
+        <img src="https://newmapsplus.github.io/assets/graphics/logo-2018-nmp-75px-h-gray.png"
+          alt="University of Kentucky Geography">
+      </a>
+
+      <a href="https://uky-gis.github.io">
+        <img src="https://newmapsplus.github.io/assets/graphics/logo-2018-geography-75px-h.png"
+          alt="University of Kentucky Geography">
+      </a>
+  </footer>
+  <!-- **************************************************************** -->
+  <!-- Check to make this links to the most current version of Leaflet! -->
+  <!-- **************************************************************** -->
+  <script type="text/javascript" src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+  <!-- **************************************************************** -->
+  <script language="javascript">
+    var map = L.map('map', {
+      center: [29.9311039, -90.0992614],
+      zoom: 15,
+      zoomSnap: .4,
+      zoomDelta: 0
+    });
+    map.attributionControl.setPrefix('');
+
+    var tileUrl =
+      'https://{s}.tile.thunderforest.com/neighbourhood/{z}/{x}/{y}.png?apikey=ef45178e209e461983726086cb45354d',
+      layer = new L.TileLayer(tileUrl, {
+        attribution: '<a href="https://leafletjs.com/">Leaflet</a> | Maps &copy; <a href="https://www.thunderforest.com">Thunderforest</a>, Data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
+        maxZoom: 22
+      });
+
+    map.addLayer(layer);
+    // Begin writing/modifying code for Lab 05 here
+
+    const hotspots = [{
+        name: "Mariza",
+        properties: {
+          description: "Italian-inspired fare dished out in an airy loft building with an industrial-chic vibe.",
+          coordinates: [29.9629337, -90.0501008],
+          url: 'http://marizaneworleans.com/',
+          phone: '(504) 598-5700',
+          icon: 'svgs/restaurant-15.svg'
+        }
+      },
+      {
+        name: "Audubon Butterfly Garden and Insectarium",
+        properties: {
+          description: "Interactive insect exhibits, bugs in action & an IMAX theater all in a U.S. Custom House.",
+          coordinates: [29.9516522, -90.0663668],
+          url: 'https://audubonnatureinstitute.org/insectarium',
+          phone: '(504)524-2847',
+          icon: 'svgs/zoo-15.svg'
+        }
+      },
+      {
+        name: "Audubon Zoo",
+        properties: {
+          description: "Leafy home to Amur leopards, orangutans & white alligators, with presentations & feedings.",
+          coordinates: [29.9237403, -90.131514],
+          url: 'https://audubonnatureinstitute.org/',
+          phone: '(504)861-2537',
+          icon: 'svgs/zoo-15.svg'
+        }
+      },
+      {
+        name: "Southern Food and Beverage Museum & Museum of the American Cocktail",
+        properties: {
+          description: "Unique museum with exhibits spotlighting the food, drink & culture of the South, along with events.",
+          coordinates: [29.9409793, -90.0792288],
+          url: 'https://southernfood.org/',
+          phone: '(504)569-0405',
+          icon: 'svgs/museum-15.svg'
+        }
+      },
+      {
+        name: "Fasullo's Piggly Wiggly",
+        properties: {
+          description: "Grocery store with an awesome name.",
+          coordinates: [29.8991941, -90.1429626],
+          url: 'http://www.wegopig.com/',
+          phone: '(504)347-7333',
+          icon: 'svgs/grocery-15.svg'
+        }
+      },
+      {
+        name: "The National WWII Museum",
+        properties: {
+          description: "Multi-building museum with interactive submarine exhibit, planes, 4-D theater & eatery downstairs.",
+          coordinates: [29.9430574, -90.0706925],
+          url: 'http://www.nationalww2museum.org/',
+          phone: '(504)528-1944',
+          icon: 'svgs/museum-15.svg'
+        }
+      },
+      {
+        name: "Walmart Supercenter",
+        properties: {
+          description: "\"<i>If Walmart don't got it, you probably don't need it.\"</i> <br><br> Also a great place to people watch after hours, if you're feeling adventurous.",
+          coordinates: [29.9254358, -90.0703298],
+          url: 'https://www.walmart.com/store/5022-new-orleans-la?cn=Tracking_local_pack_1',
+          phone: '(504)522-4142',
+          icon: 'svgs/pharmacy-15.svg'
+        }
+      },
+    ];
+
+
+    //// demonstrates how items can be pushed to the array
+    // hotspots.push({
+    // name: "Faro del Castillo San Felipe del Morro",
+    // properties: {
+    //     description: "Castillo San Felipe del Morro, (El Morro) sits atop a high promontory overlooking the entrance to the San Juan Bay.",
+    //     coordinates: [18.4709031,-66.1234792],
+    //     url: 'https://www.nps.gov/saju/planyourvisit/index.htm',
+    //     phone: '(787) 729-6777',
+    //     icon: 'svgs/museum-15.svg'
+    //   }
+    // })
+
+    // Create empty latLng bounds for zooming/centering map dynamically
+    const bounds = L.latLngBounds();    
+
+    for (var i = 0; i < hotspots.length; i++) {
+      console.log(hotspots[i].name)
+      let props = hotspots[i].properties;
+      console.log(props); // Object { ... }
+      console.log(props.description); // Italian-inspired fare ...
+      console.log(props.url); // http://marizaneworleans.com/
+      // assign a string, wrapping the name of the place within two HTML bold tags
+      const a = props.url
+      let url
+      const first = a.indexOf("//") + 2;
+      if (a.indexOf(".com/") > 0 || a.indexOf(".org/") > 0) {
+        const last = () => {
+          return (a.indexOf(".com/") > 0 ? a.indexOf(".com/") : a.indexOf(".org/")) + 4;
+        }
+        url = a.slice(first, last())
+      } else {
+        url = a.slice(first, a.indexOf(".gov/") + 4 ) 
+      }
+      var popup = `<h3>${hotspots[i].name}</h3>
+             <p>${props.description}</p>
+             <p><b>website</b>: <a href='${props.url}'>${url}</a></p>
+             <p><b>phone</b>: ${props.phone}</p>`
+      //  Next, we'll insert some more Leaflet code to help use this target image as the marker icon. Place this code below where you declare the variable "props" but above where we create the var "marker"
+      var icon = L.icon({
+        iconUrl: props.icon,
+        iconSize: [40, 40],
+        popupAnchor: [0, -22],
+        className: "icon"
+      })
+      var marker = L.marker(hotspots[i].properties.coordinates, {
+          icon: icon
+        })
+        .addTo(map)
+        .bindPopup(popup);
+      marker.on("mouseover", function () {
+        this.openPopup();
+      });
+      marker.on("click", function () {
+        this.closePopup();
+      });
+
+      //  Extend the bounds as features are added
+      bounds.extend(hotspots[i].properties.coordinates)   
+    }
+
+    // Fit map to the extent of hotspots
+    map.fitBounds(bounds)
+  </script>
+
+</body>
+
+</html>
